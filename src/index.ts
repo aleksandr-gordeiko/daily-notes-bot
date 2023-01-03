@@ -1,17 +1,33 @@
-import { Bot } from 'grammy/out/bot';
+import { Bot, Context, session } from 'grammy';
+import type { Conversation, ConversationFlavor } from '@grammyjs/conversations';
+import { conversations, createConversation } from '@grammyjs/conversations';
+
 import { connectDB, closeConnection } from './db';
 
 import error from './middlewares/error';
-// Import other middlewares
+import userRestriction from './middlewares/userRestriction';
+import onMessage from './onMessage';
+import login from './commands/login';
+import logout from './commands/logout';
 
-// Import commands
+export type CustomContext = Context & ConversationFlavor;
+export type LoginConversation = Conversation<CustomContext>;
 
-const bot: Bot = new Bot(process.env.BOT_API_TOKEN);
+const bot = new Bot<CustomContext>(process.env.BOT_API_TOKEN);
 
+bot.use(userRestriction);
 bot.use(error);
-// Use other middlewares
+bot.use(session({ initial: () => ({}) }));
+bot.use(conversations());
 
-// Bind commands
+bot.use(createConversation(login, 'login'));
+bot.command('login', async (ctx) => {
+  await ctx.conversation.enter('login');
+});
+
+bot.command('logout', logout);
+
+bot.on('message:text', onMessage);
 
 process.once('SIGINT', () => {
   closeConnection()
