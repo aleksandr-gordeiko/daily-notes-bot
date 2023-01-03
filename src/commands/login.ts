@@ -11,9 +11,13 @@ const login = async (conv: LoginConversation, ctx: CustomContext) => {
 
   await ctx.reply('Please, provide the username');
   const username = await conv.form.text();
+  // @ts-ignore
+  await ctx.api.deleteMessage(ctx.chat.id, conv.ctx.update.message.message_id);
 
   await ctx.reply('Please, provide the password');
   const password = await conv.form.text();
+  // @ts-ignore
+  await ctx.api.deleteMessage(ctx.chat.id, conv.ctx.update.message.message_id);
 
   if (!server || !username || !password) {
     await ctx.reply('You have provided invalid credentials');
