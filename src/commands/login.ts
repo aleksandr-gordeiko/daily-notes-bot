@@ -6,7 +6,7 @@ import type { CustomContext, LoginConversation } from '../index';
 import { LoginResponse } from '../types';
 
 const login = async (conv: LoginConversation, ctx: CustomContext) => {
-  await ctx.reply("Please, provide the server address in the following format: 'https://example.com'");
+  await ctx.reply('Please, provide the server address in the following format: https://example.com');
   const server = (await conv.form.url()).toString().slice(0, -1);
 
   await ctx.reply('Please, provide the username');

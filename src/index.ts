@@ -5,7 +5,6 @@ import { conversations, createConversation } from '@grammyjs/conversations';
 import { connectDB, closeConnection } from './db';
 
 import error from './middlewares/error';
-import userRestriction from './middlewares/userRestriction';
 import onMessage from './onMessage';
 import login from './commands/login';
 import logout from './commands/logout';
@@ -15,7 +14,6 @@ export type LoginConversation = Conversation<CustomContext>;
 
 const bot = new Bot<CustomContext>(process.env.BOT_API_TOKEN);
 
-bot.use(userRestriction);
 bot.use(error);
 bot.use(session({ initial: () => ({}) }));
 bot.use(conversations());
